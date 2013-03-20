@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+    <xs:complexType name="BillingAddress">
+    	<xs:sequence>
+	    	<xs:element name="name" type="xs:string"/>
+	    	<xs:element name="nameDetail" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
+	    	<xs:element name="street" type="xs:string"/>
+	    	<xs:element name="zip" type="xs:string"/>
+	    	<xs:element name="city" type="xs:string"/>
+    	</xs:sequence>
+    </xs:complexType>
+
+
+    <xs:complexType name="InvoiceItem">
+		<xs:simpleContent>
+			<xs:extension base="xs:string">
+				<xs:attribute name="price" type="xs:decimal" use="required" />
+		    	<xs:attribute name="number" type="xs:nonNegativeInteger" use="optional"/> 
+		    	<xs:attribute name="vat" type="xs:decimal" use="optional"/>
+			</xs:extension>
+		</xs:simpleContent>
+    </xs:complexType>
+
+
+    <xs:complexType name="Invoice">
+       <xs:sequence>
+    		<xs:element name="billingAddress" type="BillingAddress"/>
+            <xs:element name="item" type="InvoiceItem" minOccurs="1" maxOccurs="unbounded"/>
+    		<xs:element name="note" type="xs:string" minOccurs="0" maxOccurs="1"/>
+        </xs:sequence>
+    	<xs:attribute name="invoiceSubject" type="xs:string"/>
+    	<xs:attribute name="invoiceDate" type="xs:string"/>
+    	<xs:attribute name="invoiceNumber" type="xs:string"/>
+    	<xs:attribute name="defaultVat" type="xs:decimal" use="optional"/>
+        <xs:attribute name="language" type="xs:string" use="optional"/>
+        <xs:attribute name="currency" type="xs:string" use="optional"/>
+    </xs:complexType>
+
+</xs:schema>

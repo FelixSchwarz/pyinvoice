@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+<!--        <xs:include schemaLocation="Invoice.xsd" /> -->
+        <xs:include schemaLocation="invoicegenerator/xmlschema/Invoice.xsd" />
+        
+        <xs:element name="invoice" type="Invoice"/>
+        
+</xs:schema>

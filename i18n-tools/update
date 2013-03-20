@@ -1,0 +1,4 @@
+#!/bin/sh
+
+pybabel update --domain=pyinvoice --locale=de --input-file=locale/pyinvoice.pot --output-dir=locale --previous
+pybabel update --domain=pyinvoice --locale=en --input-file=locale/pyinvoice.pot --output-dir=locale --previous

@@ -1,0 +1,3 @@
+#!/bin/sh
+
+pybabel extract -o locale/pyinvoice.pot -F ./babel.cfg invoicegenerator/

@@ -1,0 +1,4 @@
+#!/bin/sh
+
+pybabel compile --domain=pyinvoice --locale=de --input-file=locale/de/LC_MESSAGES/pyinvoice.po --output-file=locale/de/LC_MESSAGES/pyinvoice.mo --statistics
+pybabel compile --domain=pyinvoice --locale=en --input-file=locale/en/LC_MESSAGES/pyinvoice.po --output-file=locale/en/LC_MESSAGES/pyinvoice.mo --statistics
