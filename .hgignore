@@ -1,4 +1,0 @@
-syntax:glob
-userdata/output
-userdata/invoice_data/*
-*.pyc
