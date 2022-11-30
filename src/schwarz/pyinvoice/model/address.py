@@ -1,16 +1,15 @@
-#!/usr/bin/env python
 # -*- coding: UTF-8 -*-
 
-class Address(object):
-    def __init__(self, name, street, zipcode, city, additional_lines=[]):
+class Address():
+    def __init__(self, name, street, zipcode, city, additional_lines=()):
         self.name = name
         self.street = street
         self.zipcode = zipcode
         self.city = city
         self.additional_lines = additional_lines
-        
+
     def __eq__(self, other):
-        if other == None or not isinstance(other, Address):
+        if other is None or not isinstance(other, Address):
             return False
         same_name = (self.name == other.name)
         same_street = (self.street == other.street)
@@ -24,9 +23,8 @@ class Address(object):
 
     def __str__(self):
         additional = ''
-        if self.additional_lines != None and self.additional_lines != []:
-            additional = "\n".join(self.additional_lines + [''])
-        return self.name + "\n" + additional + \
-                           self.street + "\n" + self.zipcode + " " + self.city
-
+        if self.additional_lines:
+            additional = '\n'.join(self.additional_lines) + '\n'
+        return self.name + '\n' + additional + \
+                           self.street + '\n' + self.zipcode + ' ' + self.city
 

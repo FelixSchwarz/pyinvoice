@@ -1,14 +1,13 @@
-#!/usr/bin/env python
 # -*- coding: UTF-8 -*-
 
-from StringIO import StringIO
+from io import StringIO
 
 from lxml import etree
-from pkg_resources import resource_string
 
-from invoicegenerator.model.invoice_item import InvoiceItem
+from ..model import InvoiceItem
 
 DEFAULT_VAT = 0.0
+
 
 class InvoiceItemParser(object):
     @classmethod

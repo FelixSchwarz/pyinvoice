@@ -1,13 +1,15 @@
-#!/usr/bin/env python
 # -*- coding: UTF-8 -*-
 
 from decimal import Decimal, ROUND_HALF_UP
 
+
+__all__ = ['Invoice']
+
 class Invoice(object):
-    DEFAULT_LANGUAGE = "de"
+    DEFAULT_LANGUAGE = 'de'
     DEFAULT_CURRENCY = 'EUR'
-    
-    def __init__(self, invoice_date, billing_address, invoice_items=[], default_vat=0.0, invoice_number="", invoice_subject="", note="", language=DEFAULT_LANGUAGE, currency=DEFAULT_CURRENCY):
+
+    def __init__(self, invoice_date, billing_address, invoice_items=(), default_vat=0.0, invoice_number='', invoice_subject='', note='', language=DEFAULT_LANGUAGE, currency=DEFAULT_CURRENCY):
         """invoice_date is an arbitrary string representing the invoice date."""
         self.invoice_date = invoice_date
         self.billing_address = billing_address
@@ -18,37 +20,35 @@ class Invoice(object):
         self.note = note
         self.language = language
         self.currency = currency
-    
+
     def get_billing_address(self):
         return self.billing_address
 
     def get_invoice_items(self):
         return self.items
-    
+
     def get_language(self):
         return self.language
-    
-    def get_real_sum(self, netto=False):
+
+    def get_real_sum(self, net=False):
         """Return the netto sum of all invoice items with all digits after the decimal point."""
-        sum = Decimal("0")
+        sum = Decimal(0)
         for i in self.items:
-            sum += i.get_real_price(netto)
+            sum += i.get_real_price(net)
         return sum
 
-    def get_sum(self, netto=False):
+    def get_sum(self, net=False):
         """Return the netto sum of all invoice items with only two digits after the decimal point.
         Brutto sums are calculated as netto sum + vat sum -- even if there would be a different
         result due to rounding if calculating real netto sum * vat."""
-        nettosum = self.get_real_sum(netto=True)
-        nettosum = nettosum.quantize(Decimal('0.01'), ROUND_HALF_UP)
-        if netto:
-            return nettosum 
-        else:
-            vat_sums = self.get_vat_sums()
-            vat = Decimal("0")
-            for (rate, sum) in vat_sums:
-                vat += sum
-            return nettosum + vat.quantize(Decimal('0.01'), ROUND_HALF_UP)
+        net_sum = self.get_real_sum(net=True)
+        net_sum = net_sum.quantize(Decimal('0.01'), ROUND_HALF_UP)
+        if net:
+            return net_sum
+        vat = Decimal(0)
+        for _, vat_sum in self.get_vat_sums():
+            vat += vat_sum
+        return net_sum + vat.quantize(Decimal('0.01'), ROUND_HALF_UP)
 
     def get_vat_sums(self):
         """Return the sums of item vats by vat rate ordered ascendingly by rate. Sums are limited to
@@ -65,18 +65,16 @@ class Invoice(object):
         vats = {}
         for i in self.items:
             rate = i.vat
-            if not vats.has_key(rate):
-                vats[rate] = Decimal("0")
+            if rate not in vats:
+                vats[rate] = Decimal(0)
             vats[rate] += i.get_vat()
-        key_list = vats.keys()
-        key_list.sort()
         vat_list = []
-        for i in key_list:
+        for i in sorted(vats.keys()):
             vat_list.append((i, vats[i]))
         return vat_list
-        
+
     def __eq__(self, other):
-        if other == None or not isinstance(other, Invoice):
+        if other is None or not isinstance(other, Invoice):
             return False
         same_invoice_date = (self.invoice_date == other.invoice_date)
         same_billing_address = (self.billing_address == other.billing_address)
@@ -89,17 +87,15 @@ class Invoice(object):
         same_currency = (self.currency == other.currency)
         return (same_invoice_date and same_billing_address and same_items and \
                 same_default_vat and same_invoice_number and \
-                same_invoice_subject and same_note and same_language and 
+                same_invoice_subject and same_note and same_language and
                 same_currency)
 
     def __ne__(self, other):
         return not (self == other)
 
     def __str__(self):
-        text = str(self.get_billing_address()) + "\n"
-#        text += str(self.items)
+        text = str(self.get_billing_address()) + '\n'
         for i in self.items:
-            text += str(i) + "\n"
+            text += str(i) + '\n'
         return text
-
 
