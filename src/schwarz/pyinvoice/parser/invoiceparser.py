@@ -11,6 +11,8 @@ from .addressparser import AddressParser
 from .invoiceitemparser import InvoiceItemParser
 
 
+__all__ = ['InvoiceParser']
+
 class InvoiceParser(object):
     @classmethod
     def _invoice_schema(cls):
