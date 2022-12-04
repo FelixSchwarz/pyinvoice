@@ -5,6 +5,15 @@ from decimal import Decimal
 
 from ..invoice_item import InvoiceItem
 
+def test_invoice_item_position_title():
+    item = InvoiceItem('foo bar', item_price=2)
+    assert item.get_title() is None
+    assert item.get_subtext() == 'foo bar'
+
+    item.name = 'foo // bar baz'
+    assert item.get_title() == 'foo'
+    assert item.get_subtext() == 'bar baz'
+
 def test_invoice_item_get_real_price():
     """Test that Decimal computation is used."""
     item = InvoiceItem('foo', 2.333, number=2)

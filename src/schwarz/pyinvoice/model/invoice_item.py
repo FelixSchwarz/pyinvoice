@@ -1,6 +1,7 @@
 # -*- coding: UTF-8 -*-
 
 from decimal import Decimal
+import re
 
 
 __all__ = ['InvoiceItem']
@@ -14,6 +15,21 @@ class InvoiceItem:
 
     def _compute_vat(self, price, vat):
         return price * vat
+
+    def get_title(self):
+        pos_title, _ = self._split_title_and_subtext()
+        return pos_title
+
+    def get_subtext(self):
+        _, pos_subtext = self._split_title_and_subtext()
+        return pos_subtext
+
+    def _split_title_and_subtext(self):
+        if '//' not in self.name:
+            return (None, self.name)
+        m = re.search(r'^(.+?)\s*//\s*(.+?)$', self.name)
+        pos_title, pos_subtext = m.groups()
+        return (pos_title, pos_subtext)
 
     def get_vat(self):
         return self.number * self._compute_vat(self.item_price, self.vat)
