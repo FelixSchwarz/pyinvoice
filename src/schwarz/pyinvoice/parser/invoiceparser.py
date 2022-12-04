@@ -1,10 +1,10 @@
 # -*- coding: UTF-8 -*-
 
 from decimal import Decimal
+import importlib.resources
 from io import BytesIO, StringIO
 
 from lxml import etree
-from pkg_resources import resource_string
 
 from ..model.invoice import Invoice
 from .addressparser import AddressParser
@@ -16,10 +16,10 @@ __all__ = ['InvoiceParser']
 class InvoiceParser(object):
     @classmethod
     def _invoice_schema(cls):
-        contents = resource_string('schwarz.pyinvoice.parser.xmlschema', 'Invoice.xsd')
-        xsd_fp = StringIO(contents.decode('utf8'))
-        xml_parser = etree.XMLParser(load_dtd=True)
-        xmlschema_doc = etree.parse(xsd_fp, xml_parser)
+        xsd_ref = importlib.resources.files('schwarz.pyinvoice.parser.xmlschema').joinpath('Invoice.xsd')
+        with xsd_ref.open('r', encoding='utf8') as xsd_fp:
+            xml_parser = etree.XMLParser(load_dtd=True)
+            xmlschema_doc = etree.parse(xsd_fp, xml_parser)
         xml_schema = etree.XMLSchema(xmlschema_doc)
         return xml_schema
 
