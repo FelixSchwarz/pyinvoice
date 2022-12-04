@@ -46,9 +46,6 @@ def cli_main():
         pdf_path = Path(path_invoice_xml).with_suffix(suffix)
     else:
         pdf_path = Path(args.PDF)
-    if pdf_path.exists():
-        sys.stderr.write('PDF "%s" already exists, will not overwrite existing file.\n' % str(pdf_path))
-        sys.exit(2)
 
     invoice = InvoiceParser.parse(filename=path_invoice_xml)
     invoice_cfg = parse_config(path_cfg)
