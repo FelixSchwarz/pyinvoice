@@ -2,12 +2,14 @@
 
 Usage:
     pyinvoice [options] <INVOICE> [<PDF>]
+    pyinvoice --version
 
 Arguments:
     --config=<CFG>    Path to configuration file (default: ./invoicing.ini)
     --with-logo       Include logo in PDF invoice
 '''
 
+from importlib.metadata import version
 from pathlib import Path
 import sys
 
@@ -22,7 +24,14 @@ __all__ = ['cli_main']
 
 def cli_main():
     args = docopt(__doc__)
+    show_version = args['--version']
+    if show_version:
+        version_str = version('pyinvoice')
+        print(version_str)
+        return
+
     path_invoice_xml = args['<INVOICE>']
+
     if not Path(path_invoice_xml).exists():
         sys.stderr.write('Invoice file "%s" does not exist.\n' % path_invoice_xml)
         sys.exit(1)
