@@ -1,7 +1,7 @@
 '''Generate PDF invoices from XML files.
 
 Usage:
-    pyinvoice [options] <INVOICE> [<PDF>]
+    pyinvoice [options] [--ignore=<KEY>]... <INVOICE> [<PDF>]
     pyinvoice --version
 
 Arguments:
@@ -15,6 +15,7 @@ import sys
 
 from docopt import docopt
 
+from .check import check_invoice, MetaInfo
 from .config import parse_config
 from .parser import InvoiceParser
 from .pdf_generator import generate_pdf
@@ -47,6 +48,7 @@ def cli_main():
             sys.exit(2)
         path_cfg = str(default_cfg)
 
+    ignored_errors = args['--ignore']
     with_logo = args['--with-logo']
     # == 'None' because argopt 0.7.1 uses that in case the user did not specify
     # the value explicitely
@@ -59,5 +61,18 @@ def cli_main():
 
     invoice = InvoiceParser.parse(filename=path_invoice_xml)
     invoice_cfg = parse_config(path_cfg)
+
+    config_dir = Path(path_cfg).parent
+    meta = MetaInfo(config=invoice_cfg, config_dir=config_dir, invoice_filename=path_invoice_xml)
+    errors = check_invoice(invoice, meta)
+    if errors:
+        found_error = False
+        for error in errors:
+            if error.key not in ignored_errors:
+                print(error.message)
+                found_error = True
+        if found_error:
+            return
+
     generate_pdf(invoice, invoice_cfg, target_path=pdf_path, with_logo=with_logo)
 
