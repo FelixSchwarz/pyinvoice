@@ -8,7 +8,14 @@ from babel.support import Format, Translations
 import jinja2
 
 
-__all__ = ['generate_pdf']
+__all__ = ['generate_pdf', 'is_weasyprint_available']
+
+def is_weasyprint_available():
+    try:
+        subprocess.run(['weasyprint', '--version'], capture_output=True, shell=False)
+    except FileNotFoundError:
+        return False
+    return True
 
 def generate_pdf(invoice, invoice_cfg, target_path, *, with_logo=False):
     template_path = Path(invoice_cfg['template'])

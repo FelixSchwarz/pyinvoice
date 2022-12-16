@@ -18,7 +18,7 @@ from docopt import docopt
 from .check import check_invoice, MetaInfo
 from .config import parse_config
 from .parser import InvoiceParser
-from .pdf_generator import generate_pdf
+from .pdf_generator import generate_pdf, is_weasyprint_available
 
 
 __all__ = ['cli_main']
@@ -73,6 +73,10 @@ def cli_main():
                 found_error = True
         if found_error:
             return
+
+    if not is_weasyprint_available():
+        print('"weasyprint" not found, please install the weasyprint package.')
+        return
 
     generate_pdf(invoice, invoice_cfg, target_path=pdf_path, with_logo=with_logo)
 
