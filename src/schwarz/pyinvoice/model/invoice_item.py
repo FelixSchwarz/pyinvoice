@@ -7,11 +7,12 @@ import re
 __all__ = ['InvoiceItem']
 
 class InvoiceItem:
-    def __init__(self, name, item_price, vat=0, number=1):
+    def __init__(self, name, item_price, vat=0, number=1, meta=None):
         self.name = name
         self.number = Decimal(str(number))
         self.item_price = Decimal(str(item_price))
         self.vat = Decimal(str(vat))
+        self.meta = meta or {}
 
     def _compute_vat(self, price, vat):
         return price * vat
@@ -53,11 +54,15 @@ class InvoiceItem:
         same_price = (self.item_price == other.item_price)
         same_vat = (self.vat == other.vat)
         same_number = (self.number == other.number)
+        # not checking .meta
         return same_name and same_price and same_vat and same_number
 
     def __ne__(self, other):
         return not (self == other)
 
-    def __str__(self):
-        return self.name + ", " + str(self.number) + ", " + str(self.item_price) + \
-                           ", " + str(self.vat)
+    def __repr__(self):
+        klassname = self.__class__.__name__
+        _attrs = ['name', 'item_price', 'vat', 'number', 'meta']
+        attr_strs = ', '.join([f'{key}={repr(getattr(self, key))}' for key in _attrs])
+        return f'{klassname}({attr_strs})'
+

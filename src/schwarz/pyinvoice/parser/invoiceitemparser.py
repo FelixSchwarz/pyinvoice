@@ -1,5 +1,6 @@
 # -*- coding: UTF-8 -*-
 
+from decimal import Decimal
 from io import StringIO
 
 from lxml import etree
@@ -12,7 +13,11 @@ DEFAULT_VAT = 0.0
 class InvoiceItemParser(object):
     @classmethod
     def parse_element(self, element, default_vat=DEFAULT_VAT):
-        (price, number, vat) = (0, 1, default_vat)
+        price = None
+        number = 1
+        vat = default_vat
+        meta = {}
+
         name = element.text.strip()
         attributes = element.attrib
         if attributes.has_key("price"):
@@ -21,7 +26,13 @@ class InvoiceItemParser(object):
             number = attributes["number"]
         if attributes.has_key("vat"):
             vat = attributes["vat"]
-        return InvoiceItem(name, price, number=number, vat=vat)
+
+        for key in ('hours', 'hourly_rate'):
+            if attributes.has_key(key):
+                meta[key] = Decimal(attributes[key])
+        if price is None:
+            price = meta['hours'] * meta['hourly_rate']
+        return InvoiceItem(name, price, number=number, vat=vat, meta=meta)
 
     @classmethod
     def parse(self, content="", default_vat=DEFAULT_VAT):

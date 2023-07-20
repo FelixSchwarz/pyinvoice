@@ -15,9 +15,11 @@
     <xs:complexType name="InvoiceItem">
         <xs:simpleContent>
             <xs:extension base="xs:string">
-                <xs:attribute name="price" type="xs:decimal" use="required" />
+                <xs:attribute name="price" type="xs:decimal" use="optional" />
                 <xs:attribute name="number" type="xs:nonNegativeInteger" use="optional"/>
                 <xs:attribute name="vat" type="xs:decimal" use="optional"/>
+                <xs:attribute name="hours" type="xs:decimal" use="optional"/>
+                <xs:attribute name="hourly_rate" type="xs:decimal" use="optional"/>
             </xs:extension>
         </xs:simpleContent>
     </xs:complexType>
