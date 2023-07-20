@@ -30,7 +30,7 @@ def discover_checks(path):
         if filename.startswith('.') or filename.startswith('_'):
             continue
         elif '.' in py_path.stem:
-            sys.stderr.write(f'file name "{str(py_path)}" contains more than on ".", skipping file.\n')
+            sys.stderr.write(f'file name "{str(py_path)}" contains more than one ".", skipping file.\n')
             continue
         checker_mod = load_checker_from_path(py_path)
         checks.append(checker_mod.check_invoice)
