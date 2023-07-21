@@ -33,6 +33,24 @@ will be rendered as a currency value.
 </item>
 ```
 
+To apply templating you need to call the `tt()` template function in your html template, for example like this:
+
+```html
+{% for item in invoice.get_invoice_items() %}
+<tr class="position-row">
+    <td>
+        {% if item.get_title() %}
+        <div class="pos-title">{{ tt(item.get_title(), item) }}</div>
+        {% endif %}
+        {{ tt(item.get_subtext(), item) }}
+    </td>
+    <td class="net-amount">
+        {{ f.amount(item.get_price(net=True)) }}
+    </td>
+</tr>
+{% endfor %}
+```
+
 If the invoice is set to English/USD the rendered string will be "My work: 16.75 h at $60.00".
 For German/EUR the output is "My work: 16,75 h at 60,00 €".
 

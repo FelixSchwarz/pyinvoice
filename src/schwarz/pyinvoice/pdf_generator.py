@@ -7,6 +7,8 @@ from tempfile import NamedTemporaryFile
 from babel.support import Format, Translations
 import jinja2
 
+from .templating import templated_text
+
 
 __all__ = ['generate_pdf', 'is_weasyprint_available']
 
@@ -27,7 +29,12 @@ def generate_pdf(invoice, invoice_cfg, target_path, *, with_logo=False):
     template_dir = template_path.parent
     template = load_invoice_template(template_path, locale=invoice.language)
     _format = build_formatter(invoice.language, currency=invoice.currency)
-    template_params = {'f': _format, **invoice_cfg, 'with_logo': with_logo}
+    template_params = {
+        'tt': lambda text, dbobj: templated_text(text, dbobj, _format),
+        'f': _format,
+        **invoice_cfg,
+        'with_logo': with_logo,
+    }
 
     html_str = template.render(invoice=invoice, **template_params)
     with store_generated_html(template_dir, html_str) as path_html:
