@@ -17,12 +17,16 @@ def is_weasyprint_available():
         return False
     return True
 
+def build_formatter(locale, currency):
+    _format = Format(locale=locale)
+    _format.amount = lambda v: _format.currency(v, currency=currency)
+    return _format
+
 def generate_pdf(invoice, invoice_cfg, target_path, *, with_logo=False):
     template_path = Path(invoice_cfg['template'])
     template_dir = template_path.parent
     template = load_invoice_template(template_path, locale=invoice.language)
-    _format = Format(locale=invoice.language)
-    _format.amount = lambda v: _format.currency(v, currency=invoice.currency)
+    _format = build_formatter(invoice.language, currency=invoice.currency)
     template_params = {'f': _format, **invoice_cfg, 'with_logo': with_logo}
 
     html_str = template.render(invoice=invoice, **template_params)
