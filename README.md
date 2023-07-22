@@ -67,7 +67,7 @@ net sum, VAT values and the total sum automatically for you.
 ```xml
 <?xml version="1.0" encoding='UTF-8'?>
 <invoice invoiceSubject="Software to create PDF Invoices"
-         invoiceDate="21.07.2023" invoiceNumber="00213"
+         invoiceDate="2023-07-21" invoiceNumber="00213"
          defaultVat="0.19">
 
 	<billingAddress>

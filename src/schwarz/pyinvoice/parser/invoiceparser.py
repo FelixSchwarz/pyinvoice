@@ -1,8 +1,10 @@
 # -*- coding: UTF-8 -*-
 
+from datetime import date as Date
 from decimal import Decimal
 import importlib.resources
 from io import BytesIO, StringIO
+import re
 
 from lxml import etree
 
@@ -48,7 +50,9 @@ class InvoiceParser(object):
         if attributes.has_key('invoiceSubject'):
             subject = attributes['invoiceSubject']
         if attributes.has_key('invoiceDate'):
-            date = attributes['invoiceDate']
+            date_str = attributes['invoiceDate']
+            m_date = re.search(r'^(\d{4})\-(\d{2})\-(\d{2})$', date_str)
+            date = Date(*map(int, m_date.groups())) if m_date else date_str
         if attributes.has_key('invoiceNumber'):
             number = attributes['invoiceNumber']
         if attributes.has_key('defaultVat'):

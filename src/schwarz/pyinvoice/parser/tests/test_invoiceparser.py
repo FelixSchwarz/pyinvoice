@@ -1,11 +1,13 @@
 # -*- coding: UTF-8 -*-
 
+from datetime import date as Date
+
 from schwarz.pyinvoice.model import Address, Invoice, InvoiceItem
 from ..invoiceparser import InvoiceParser
 
 
-def generate_xml(additional_invoice_attribute=""):
-    xml = """<invoice invoiceSubject="Rechnung" invoiceDate="30.02.2006" invoiceNumber="R001" defaultVat="0.42" %s>
+def generate_xml(extra_invoice_attribute='', *, date='30.02.2006'):
+    xml = f"""<invoice invoiceSubject="Rechnung" invoiceDate="{date}" invoiceNumber="R001" defaultVat="0.42" {extra_invoice_attribute}>
     <billingAddress>
        <name>FooBar Inc.</name>
        <street>9th Avenue</street>
@@ -22,7 +24,7 @@ def generate_xml(additional_invoice_attribute=""):
     <note>Foobar</note>
 </invoice>
 """
-    return xml % additional_invoice_attribute
+    return xml
 
 
 def test_parse_invoice():
@@ -44,4 +46,8 @@ def test_parse_invoice_with_language():
 def test_can_parse_invoice_currency():
     invoice = InvoiceParser.parse(content=generate_xml('currency="USD"'))
     assert invoice.currency == 'USD'
+
+def test_can_parse_invoice_date_as_date():
+    invoice = InvoiceParser.parse(content=generate_xml(date='2023-06-01'))
+    assert invoice.invoice_date == Date(2023, 6, 1)
 
