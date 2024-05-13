@@ -1,23 +1,43 @@
 
 from contextlib import contextmanager
 from pathlib import Path
+import re
 import subprocess
+import sys
 from tempfile import NamedTemporaryFile
 
 from babel.support import Format, Translations
 import jinja2
+from packaging.version import Version
 
 from .templating import templated_text
 
 
 __all__ = ['generate_pdf', 'is_weasyprint_available']
 
+_weasyprint_version = None
+
 def is_weasyprint_available():
     try:
-        subprocess.run(['weasyprint', '--version'], capture_output=True, shell=False)
+        process = subprocess.run(['weasyprint', '--version'], capture_output=True, shell=False)
     except FileNotFoundError:
         return False
+    global _weasyprint_version
+    _weasyprint_version = _extract_weasyprint_version(process.stdout)
     return True
+
+
+def _extract_weasyprint_version(weasyprint_stdout):
+    version_pattern = br'WeasyPrint version (\d+\.\d+)$'
+    match = re.search(version_pattern, weasyprint_stdout.strip())
+    if not match:
+        sys.stderr.write('Could not determine WeasyPrint version\n')
+        sys.stderr.write('Output of "weasyprint --version": %r\n' % weasyprint_stdout)
+        sys.exit(10)
+    version_str = match.group(1).decode('ascii')
+    # LATER: check for minimum version (pdf-identifier)
+    return Version(version_str)
+
 
 def build_formatter(locale, currency):
     _format = Format(locale=locale)
