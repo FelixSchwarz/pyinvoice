@@ -39,6 +39,12 @@ def _extract_weasyprint_version(weasyprint_stdout):
     return Version(version_str)
 
 
+def weasyprint_version():
+    if _weasyprint_version is None:
+        raise RuntimeError('WeasyPrint version not yet determined.')
+    return _weasyprint_version
+
+
 def build_formatter(locale, currency):
     _format = Format(locale=locale)
     _format.amount = lambda v: _format.currency(v, currency=currency)
@@ -56,9 +62,28 @@ def generate_pdf(invoice, invoice_cfg, target_path, *, with_logo=False):
         'with_logo': with_logo,
     }
 
+    use_pdfa = (weasyprint_version() >= Version('62.0'))
+    if use_pdfa:
+        if weasyprint_version() < Version('62.0'):
+            # WeasyPrint <61 did support PDF/A-3b but required setting the
+            # "PDF identifier" manually and I don't know what to pass in there.
+            error_msg = (
+                'You need at least WeasyPrint version 62.0 to generate PDF/A-3b files '
+                f'(found WeasyPrint {weasyprint_version()} in PATH).'
+            )
+            sys.stderr.write(error_msg + '\n')
+            sys.exit(11)
+        pdfa_params = ('--pdf-variant=pdf/a-3b',)
+    else:
+        pdfa_params = ()
     html_str = template.render(invoice=invoice, **template_params)
     with store_generated_html(template_dir, html_str) as path_html:
-        cmd = ['weasyprint', str(path_html.absolute()), str(target_path.absolute())]
+        cmd = [
+            'weasyprint',
+            *pdfa_params,
+            str(path_html.absolute()),
+            str(target_path.absolute()),
+        ]
         subprocess.run(cmd, shell=False, cwd=template_dir)
 
 def load_invoice_template(template_path, locale=None):
