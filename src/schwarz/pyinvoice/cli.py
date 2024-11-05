@@ -6,7 +6,7 @@ Usage:
 
 Arguments:
     --config=<CFG>    Path to configuration file (default: ./invoicing.ini)
-    --with-logo       Include logo in PDF invoice
+    --without-logo    No logo in PDF invoice
 '''
 
 from importlib.metadata import version
@@ -49,7 +49,7 @@ def cli_main():
         path_cfg = str(default_cfg)
 
     ignored_errors = args['--ignore']
-    with_logo = args['--with-logo']
+    with_logo = not args['--without-logo']
     # == 'None' because argopt 0.7.1 uses that in case the user did not specify
     # the value explicitely
     pdf_path = args['<PDF>']
