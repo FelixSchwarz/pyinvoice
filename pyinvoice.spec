@@ -6,8 +6,8 @@ block_cipher = None
 
 
 a = Analysis(
-    ['scripts/pyinvoice'],
-    pathex=[],
+    ['src/schwarz/pyinvoice/cli.py'],
+    pathex=['src'],
     binaries=[],
     datas=[
         *copy_metadata('pyinvoice'),

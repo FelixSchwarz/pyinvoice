@@ -15,10 +15,10 @@ import sys
 
 from docopt import docopt
 
-from .check import check_invoice, MetaInfo
-from .config import parse_config
-from .parser import InvoiceParser
-from .pdf_generator import generate_pdf, is_weasyprint_available
+from schwarz.pyinvoice.check import check_invoice, MetaInfo
+from schwarz.pyinvoice.config import parse_config
+from schwarz.pyinvoice.parser import InvoiceParser
+from schwarz.pyinvoice.pdf_generator import generate_pdf, is_weasyprint_available
 
 
 __all__ = ['cli_main']
