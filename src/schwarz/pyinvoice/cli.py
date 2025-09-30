@@ -80,3 +80,6 @@ def cli_main():
 
     generate_pdf(invoice, invoice_cfg, target_path=pdf_path, with_logo=with_logo)
 
+
+if __name__ == '__main__':
+    cli_main()
