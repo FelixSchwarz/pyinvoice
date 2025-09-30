@@ -2,6 +2,8 @@
 
 from decimal import Decimal, ROUND_HALF_UP
 
+from schwarz.pyinvoice.model.model_utils import round_half_up
+
 
 __all__ = ['Invoice']
 
@@ -41,14 +43,13 @@ class Invoice(object):
         """Return the netto sum of all invoice items with only two digits after the decimal point.
         Brutto sums are calculated as netto sum + vat sum -- even if there would be a different
         result due to rounding if calculating real netto sum * vat."""
-        net_sum = self.get_real_sum(net=True)
-        net_sum = net_sum.quantize(Decimal('0.01'), ROUND_HALF_UP)
+        net_sum = round_half_up(self.get_real_sum(net=True))
         if net:
             return net_sum
         vat = Decimal(0)
         for _, vat_sum in self.get_vat_sums():
             vat += vat_sum
-        return net_sum + vat.quantize(Decimal('0.01'), ROUND_HALF_UP)
+        return net_sum + round_half_up(vat)
 
     def get_vat_sums(self):
         """Return the sums of item vats by vat rate ordered ascendingly by rate. Sums are limited to
@@ -56,7 +57,7 @@ class Invoice(object):
         vats = self.get_real_vat_sums()
         rounded_vats = []
         for (rate, sum) in vats:
-            sum = sum.quantize(Decimal('0.01'), ROUND_HALF_UP)
+            sum = round_half_up(sum)
             rounded_vats.append((rate, sum))
         return rounded_vats
 

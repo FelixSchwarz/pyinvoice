@@ -3,6 +3,8 @@
 from decimal import Decimal
 import re
 
+from schwarz.pyinvoice.model.model_utils import round_half_up
+
 
 __all__ = ['InvoiceItem']
 
@@ -38,7 +40,7 @@ class InvoiceItem:
     def get_price(self, net=False):
         """Return the price with only two digits after the decimal point."""
         price = self.get_real_price(net)
-        return price.quantize(Decimal('0.01'))
+        return round_half_up(price)
 
     def get_real_price(self, net=False):
         """Return the price with all digits after the decimal point."""
