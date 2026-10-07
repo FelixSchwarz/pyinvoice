@@ -35,7 +35,8 @@ dependencies = [
 
 [project.optional-dependencies]
 testing = [
-    "pytest",
+    # >= 8.1: "consider_namespace_packages"
+    "pytest >= 8.1",
 ]
 
 [project.urls]
@@ -58,5 +59,6 @@ packages = ["src/schwarz"]
 # "pyproject.toml", "README.md" and "LICENSE.txt" are always included
 include = [
     "/src",
+    "/pytest.ini",
     "/VERSION.txt",
 ]
