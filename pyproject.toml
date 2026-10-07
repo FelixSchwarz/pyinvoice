@@ -51,6 +51,9 @@ pyinvoice = "schwarz.pyinvoice.cli:cli_main"
 
 
 [dependency-groups]
+build = [
+    "hatchling",
+]
 quality = [
     # >= 0.4.7 for "prek update --freeze --cooldown-days"
     "prek >= 0.4.7",
@@ -71,6 +74,10 @@ include = [
     "/pytest.ini",
     "/VERSION.txt",
 ]
+
+
+[tool.uv]
+exclude-newer = "7 days"
 
 
 [tool.ruff]
