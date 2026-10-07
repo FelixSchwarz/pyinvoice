@@ -73,6 +73,33 @@ jobs:
       run: uv run --locked --python python --group quality --all-extras ty check src
 
 
+  # Build the PyInstaller executable (as the release workflow does) so changes
+  # which break it are noticed before a release.
+  executable:
+    runs-on: ubuntu-latest
+    container:
+      # The executable only runs on systems with the same or a newer glibc, so
+      # it is built on an older (but still supported) Debian release.
+      image: python:3.14-bookworm
+    timeout-minutes: 10
+    env:
+      UV_LINK_MODE: copy
+
+    steps:
+    - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      with:
+        persist-credentials: false
+    - uses: astral-sh/setup-uv@c18668ad3cf93ea998bef934396af7bb5c839dc7 # v10.2.0
+      with:
+        version: "latest-known"
+        enable-cache: false
+
+    - name: build wheel and executable
+      run: |
+        uv build --wheel --build-constraint build-constraints.txt --require-hashes
+        tools/build-executable.sh python
+
+
   tests-cpython:
     runs-on: ubuntu-latest
     strategy:
