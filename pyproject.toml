@@ -117,6 +117,11 @@ select = [
     "RUF100",
 ]
 
+[tool.ruff.lint.per-file-ignores]
+# standalone script (shared with other projects) which might be run with any
+# Python version so it needs its own version check
+"tools/update-workflow-actions.py" = ["UP036"]
+
 [tool.ruff.lint.isort]
 lines-after-imports = 2
 known-first-party = ["schwarz.pyinvoice"]

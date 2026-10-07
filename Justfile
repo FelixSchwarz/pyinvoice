@@ -38,3 +38,9 @@ update-dependencies:
 [group("dependencies")]
 update-prek-hooks:
     uv run --group quality prek update --freeze --cooldown-days=7
+
+# Stays within the current major version unless "--allow-major-upgrades" is used.
+[doc('pin GitHub Actions in ".github/workflows" to the latest commit sha')]
+[group("dependencies")]
+update-workflow-actions *ARGS:
+    ./tools/update-workflow-actions.py --cooldown-days=7 {{ARGS}}
