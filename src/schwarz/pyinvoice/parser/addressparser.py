@@ -7,7 +7,7 @@ from lxml import etree
 from ..model.address import Address
 
 
-class AddressParser(object):
+class AddressParser:
     @classmethod
     def parse_element(self, element):
         (name, street, zipcode, city, additional) = (None, None, None, None, [])

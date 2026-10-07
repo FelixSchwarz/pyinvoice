@@ -4,6 +4,7 @@
 from decimal import Decimal
 
 from schwarz.pyinvoice.model import InvoiceItem
+
 from ..pdf_generator import build_formatter
 from ..templating import templated_text
 

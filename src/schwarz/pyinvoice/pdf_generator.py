@@ -1,14 +1,14 @@
 
-from contextlib import contextmanager
 import os
-from pathlib import Path
 import re
 import subprocess
 import sys
+from contextlib import contextmanager
+from pathlib import Path
 from tempfile import NamedTemporaryFile
 
-from babel.support import Format, Translations
 import jinja2
+from babel.support import Format, Translations
 from packaging.version import Version
 
 from .templating import templated_text

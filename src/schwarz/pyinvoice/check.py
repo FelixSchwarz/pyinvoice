@@ -1,7 +1,7 @@
 
-from collections import namedtuple
 import importlib.util
 import sys
+from collections import namedtuple
 
 
 __all__ = ['check_invoice', 'MetaInfo']

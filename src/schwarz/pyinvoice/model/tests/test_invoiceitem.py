@@ -5,6 +5,7 @@ from decimal import Decimal
 
 from ..invoice_item import InvoiceItem
 
+
 def test_invoice_item_position_title():
     item = InvoiceItem('foo bar', item_price=2)
     assert item.get_title() is None
@@ -55,7 +56,7 @@ def test_invoice_item_inequal():
     """Test that the custom ne function is working.."""
     a = InvoiceItem('foo', 10, vat=0.10, number=2)
     assert not (a != InvoiceItem('foo', 10, vat=0.10, number=2))
-    assert a != None
+    assert a != None  # noqa: E711
     assert a != 'invalid'
     assert a != InvoiceItem('bar', 10, vat=0.10, number=2)
     assert a != InvoiceItem('foo', 15, vat=0.10, number=2)

@@ -1,10 +1,10 @@
 # -*- coding: UTF-8 -*-
 
+import importlib.resources
+import re
 from datetime import date as Date
 from decimal import Decimal
-import importlib.resources
 from io import BytesIO, StringIO
-import re
 
 from lxml import etree
 
@@ -15,7 +15,7 @@ from .invoiceitemparser import InvoiceItemParser
 
 __all__ = ['InvoiceParser']
 
-class InvoiceParser(object):
+class InvoiceParser:
     @classmethod
     def _invoice_schema(cls):
         xsd_ref = importlib.resources.files('schwarz.pyinvoice.parser.xmlschema').joinpath('Invoice.xsd')
@@ -44,7 +44,8 @@ class InvoiceParser(object):
 
     @classmethod
     def _parse_attributes(cls, element):
-        (subject, date, number, default_vat, language) = ('', '', '', Decimal('0.0'), Invoice.DEFAULT_LANGUAGE)
+        (subject, date, number, default_vat) = ('', '', '', Decimal('0.0'))
+        language = Invoice.DEFAULT_LANGUAGE
         currency = Invoice.DEFAULT_CURRENCY
         attributes = element.attrib
         if attributes.has_key('invoiceSubject'):
@@ -78,6 +79,6 @@ class InvoiceParser(object):
                 items.append(InvoiceItemParser.parse_element(item, default_vat=default_vat))
             elif item.tag == 'note':
                 note = item.text
-        return Invoice(date, address, items, default_vat=default_vat, 
-                       invoice_number=number, invoice_subject=subject, 
+        return Invoice(date, address, items, default_vat=default_vat,
+                       invoice_number=number, invoice_subject=subject,
                        note=note, language=language, currency=currency)

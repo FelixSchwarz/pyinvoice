@@ -1,17 +1,18 @@
 # -*- coding: UTF-8 -*-
 
-from decimal import Decimal, ROUND_HALF_UP
+from decimal import Decimal
 
 from schwarz.pyinvoice.model.model_utils import round_half_up
 
 
 __all__ = ['Invoice']
 
-class Invoice(object):
+class Invoice:
     DEFAULT_LANGUAGE = 'de'
     DEFAULT_CURRENCY = 'EUR'
 
-    def __init__(self, invoice_date, billing_address, invoice_items=(), default_vat=0.0, invoice_number='', invoice_subject='', note='', language=DEFAULT_LANGUAGE, currency=DEFAULT_CURRENCY):
+    def __init__(self, invoice_date, billing_address, invoice_items=(), default_vat=0.0, invoice_number='',
+                 invoice_subject='', note='', language=DEFAULT_LANGUAGE, currency=DEFAULT_CURRENCY):
         """invoice_date is an arbitrary string representing the invoice date."""
         self.invoice_date = invoice_date
         self.billing_address = billing_address

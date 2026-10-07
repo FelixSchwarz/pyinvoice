@@ -3,11 +3,13 @@
 from datetime import date as Date
 
 from schwarz.pyinvoice.model import Address, Invoice, InvoiceItem
+
 from ..invoiceparser import InvoiceParser
 
 
 def generate_xml(extra_invoice_attribute='', *, date='30.02.2006'):
-    xml = f"""<invoice invoiceSubject="Rechnung" invoiceDate="{date}" invoiceNumber="R001" defaultVat="0.42" {extra_invoice_attribute}>
+    xml = f"""<invoice invoiceSubject="Rechnung" invoiceDate="{date}" invoiceNumber="R001" defaultVat="0.42"
+             {extra_invoice_attribute}>
     <billingAddress>
        <name>FooBar Inc.</name>
        <street>9th Avenue</street>

@@ -1,6 +1,6 @@
 # -*- coding: UTF-8 -*-
 
-class Address():
+class Address:
     def __init__(self, name, street, zipcode, city, additional_lines=()):
         self.name = name
         self.street = street

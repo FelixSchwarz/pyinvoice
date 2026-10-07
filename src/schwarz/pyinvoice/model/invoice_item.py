@@ -1,7 +1,7 @@
 # -*- coding: UTF-8 -*-
 
-from decimal import Decimal
 import re
+from decimal import Decimal
 
 from schwarz.pyinvoice.model.model_utils import round_half_up
 
@@ -50,7 +50,7 @@ class InvoiceItem:
         return Decimal(str(price))
 
     def __eq__(self, other):
-        if other == None or not isinstance(other, InvoiceItem):
+        if other is None or not isinstance(other, InvoiceItem):
             return False
         same_name = (self.name == other.name)
         same_price = (self.item_price == other.item_price)

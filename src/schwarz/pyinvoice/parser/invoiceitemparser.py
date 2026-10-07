@@ -7,10 +7,11 @@ from lxml import etree
 
 from ..model import InvoiceItem
 
+
 DEFAULT_VAT = 0.0
 
 
-class InvoiceItemParser(object):
+class InvoiceItemParser:
     @classmethod
     def parse_element(self, element, default_vat=DEFAULT_VAT):
         price = None

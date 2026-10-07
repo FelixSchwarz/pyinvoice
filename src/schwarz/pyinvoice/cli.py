@@ -9,13 +9,13 @@ Arguments:
     --without-logo    No logo in PDF invoice
 '''
 
+import sys
 from importlib.metadata import version
 from pathlib import Path
-import sys
 
 from docopt import docopt
 
-from schwarz.pyinvoice.check import check_invoice, MetaInfo
+from schwarz.pyinvoice.check import MetaInfo, check_invoice
 from schwarz.pyinvoice.config import parse_config
 from schwarz.pyinvoice.parser import InvoiceParser
 from schwarz.pyinvoice.pdf_generator import generate_pdf, is_weasyprint_available

@@ -1,6 +1,6 @@
 
-from decimal import Decimal
 import re
+from decimal import Decimal
 
 
 __all__ = ['templated_text']
@@ -21,14 +21,14 @@ def templated_text(text, dbobj, formatter):
         _s, _e = match.span()
         result += text[last_pos:_s]
         tmpl_text = text[_s+1:_e-1]
-    
+
         var_and_filter = re.split(r'\s*\|\s*', tmpl_text, maxsplit=1)
         if len(var_and_filter) == 2:
             tmpl_var, tmpl_filter = var_and_filter
         else:
             tmpl_var, = var_and_filter
             tmpl_filter = None
-    
+
         tmpl_value = tmpl_vars[tmpl_var]
         if tmpl_filter:
             fn = getattr(formatter, tmpl_filter)
