@@ -29,4 +29,3 @@ class AddressParser:
         """Parse an Address without validation """
         doc = etree.parse(StringIO(content))
         return self.parse_element(doc.getroot())
-

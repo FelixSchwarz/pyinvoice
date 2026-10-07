@@ -14,4 +14,3 @@ def test_parse_address():
     </billingAddress>"""
     address = Address('FooBar Inc.', '9th Avenue', '12345', 'New York', [])
     assert address == AddressParser.parse(content=xml)
-

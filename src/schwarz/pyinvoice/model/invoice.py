@@ -100,4 +100,3 @@ class Invoice:
         for i in self.items:
             text += str(i) + '\n'
         return text
-

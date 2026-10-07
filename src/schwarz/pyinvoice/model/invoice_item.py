@@ -67,4 +67,3 @@ class InvoiceItem:
         _attrs = ['name', 'item_price', 'vat', 'number', 'meta']
         attr_strs = ', '.join([f'{key}={repr(getattr(self, key))}' for key in _attrs])
         return f'{klassname}({attr_strs})'
-

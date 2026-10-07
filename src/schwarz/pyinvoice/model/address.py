@@ -27,4 +27,3 @@ class Address:
             additional = '\n'.join(self.additional_lines) + '\n'
         return self.name + '\n' + additional + \
                            self.street + '\n' + self.zipcode + ' ' + self.city
-

@@ -132,4 +132,3 @@ def store_generated_html(template_path, html_str) -> Path:
         temp_fp.write(html_str)
         temp_fp.seek(0)
         yield Path(temp_fp.name)
-

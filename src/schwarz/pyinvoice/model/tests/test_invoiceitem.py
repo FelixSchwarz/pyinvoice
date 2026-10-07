@@ -62,4 +62,3 @@ def test_invoice_item_inequal():
     assert a != InvoiceItem('foo', 15, vat=0.10, number=2)
     assert a != InvoiceItem('foo', 10, vat=0.20, number=2)
     assert a != InvoiceItem('foo', 10, vat=0.10, number=4)
-

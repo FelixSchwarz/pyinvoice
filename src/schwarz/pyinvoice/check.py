@@ -43,4 +43,3 @@ def load_checker_from_path(py_path):
     checker_mod = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(checker_mod)
     return checker_mod
-

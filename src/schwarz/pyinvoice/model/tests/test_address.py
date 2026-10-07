@@ -24,4 +24,3 @@ def test_address_inequal():
     assert a != Address('Foo Bar', 'Bridge Street', '01234', 'Village', ['a', 'b'])
     assert a != Address('Foo Bar', 'Bridge Street', '01234', 'City', None)
     assert a != Address('Foo Bar', 'Bridge Street', '01234', 'City', ['c', 'd'])
-

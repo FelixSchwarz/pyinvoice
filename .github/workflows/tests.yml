@@ -24,4 +24,3 @@ jobs:
     - name: Run test suite
       run: |
         pytest -v
-

@@ -18,4 +18,3 @@ def parse_config(cfg_path: Union[os.PathLike, str]) -> dict:
         path_template = (cfg_dir / path_template).absolute()
         config['template'] = str(path_template)
     return config
-

@@ -52,4 +52,3 @@ def test_can_parse_invoice_currency():
 def test_can_parse_invoice_date_as_date():
     invoice = InvoiceParser.parse(content=generate_xml(date='2023-06-01'))
     assert invoice.invoice_date == Date(2023, 6, 1)
-
