@@ -8,9 +8,9 @@ from io import BytesIO, StringIO
 
 from lxml import etree
 
-from ..model.invoice import Invoice
-from .addressparser import AddressParser
-from .invoiceitemparser import InvoiceItemParser
+from schwarz.pyinvoice.model.invoice import Invoice
+from schwarz.pyinvoice.parser.addressparser import AddressParser
+from schwarz.pyinvoice.parser.invoiceitemparser import InvoiceItemParser
 
 
 __all__ = ['InvoiceParser']

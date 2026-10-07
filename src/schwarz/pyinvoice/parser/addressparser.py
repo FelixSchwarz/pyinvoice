@@ -4,7 +4,7 @@ from io import StringIO
 
 from lxml import etree
 
-from ..model.address import Address
+from schwarz.pyinvoice.model.address import Address
 
 
 class AddressParser:

@@ -12,7 +12,7 @@ import jinja2
 from babel.support import Format, Translations
 from packaging.version import Version
 
-from .templating import templated_text
+from schwarz.pyinvoice.templating import templated_text
 
 
 __all__ = ['generate_pdf', 'is_weasyprint_available']

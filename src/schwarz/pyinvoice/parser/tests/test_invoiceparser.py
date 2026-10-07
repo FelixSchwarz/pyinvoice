@@ -3,8 +3,7 @@
 from datetime import date as Date
 
 from schwarz.pyinvoice.model import Address, Invoice, InvoiceItem
-
-from ..invoiceparser import InvoiceParser
+from schwarz.pyinvoice.parser.invoiceparser import InvoiceParser
 
 
 def generate_xml(extra_invoice_attribute='', *, date='30.02.2006'):

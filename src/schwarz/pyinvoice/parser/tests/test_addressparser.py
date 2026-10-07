@@ -1,8 +1,7 @@
 # -*- coding: UTF-8 -*-
 
 from schwarz.pyinvoice.model import Address
-
-from ..addressparser import AddressParser
+from schwarz.pyinvoice.parser.addressparser import AddressParser
 
 
 def test_parse_address():

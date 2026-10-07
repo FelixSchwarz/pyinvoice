@@ -5,7 +5,7 @@ from io import StringIO
 
 from lxml import etree
 
-from ..model import InvoiceItem
+from schwarz.pyinvoice.model import InvoiceItem
 
 
 DEFAULT_VAT = 0.0

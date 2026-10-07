@@ -2,9 +2,9 @@
 
 from decimal import Decimal
 
-from ..address import Address
-from ..invoice import Invoice
-from ..invoice_item import InvoiceItem
+from schwarz.pyinvoice.model.address import Address
+from schwarz.pyinvoice.model.invoice import Invoice
+from schwarz.pyinvoice.model.invoice_item import InvoiceItem
 
 
 def test_invoice_equals():

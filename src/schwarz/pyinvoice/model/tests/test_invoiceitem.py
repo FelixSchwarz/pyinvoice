@@ -2,7 +2,7 @@
 
 from decimal import Decimal
 
-from ..invoice_item import InvoiceItem
+from schwarz.pyinvoice.model.invoice_item import InvoiceItem
 
 
 def test_invoice_item_position_title():

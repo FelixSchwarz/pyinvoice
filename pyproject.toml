@@ -116,6 +116,8 @@ select = [
     "I001",
     # pyupgrade: syntax which is obsolete for the minimum Python version
     "UP",
+    # flake8-tidy-imports: relative imports
+    "TID252",
 
     # Special rule code to enforce that your noqa directives are "valid", in that
     # the violations they say they ignore are actually being triggered on that line
@@ -128,6 +130,9 @@ select = [
 # standalone script (shared with other projects) which might be run with any
 # Python version so it needs its own version check
 "tools/update-workflow-actions.py" = ["UP036"]
+
+[tool.ruff.lint.flake8-tidy-imports]
+ban-relative-imports = "all"
 
 [tool.ruff.lint.isort]
 lines-after-imports = 2

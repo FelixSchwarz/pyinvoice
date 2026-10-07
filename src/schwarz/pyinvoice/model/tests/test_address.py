@@ -1,7 +1,7 @@
 # -*- coding: UTF-8 -*-
 
 
-from ..address import Address
+from schwarz.pyinvoice.model.address import Address
 
 
 def test_address_equals():

@@ -3,8 +3,7 @@
 from decimal import Decimal
 
 from schwarz.pyinvoice.model import InvoiceItem
-
-from ..invoiceitemparser import InvoiceItemParser
+from schwarz.pyinvoice.parser.invoiceitemparser import InvoiceItemParser
 
 
 def test_parse_invoice_item():

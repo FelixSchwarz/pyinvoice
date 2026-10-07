@@ -1,4 +1,4 @@
 
-from .address import *
-from .invoice import *
-from .invoice_item import *
+from schwarz.pyinvoice.model.address import *
+from schwarz.pyinvoice.model.invoice import *
+from schwarz.pyinvoice.model.invoice_item import *
