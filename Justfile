@@ -16,15 +16,23 @@ run-tests:
 setup-venv:
     uv sync --locked --all-extras --group=quality
 
+# build wheel and sdist in "dist/"
+[group("packaging")]
+build:
+    uv build --wheel --sdist --build-constraint build-constraints.txt --require-hashes
+
 # install the build backend pinned by the current lockfile
 [group("dependencies")]
 install-locked-dependencies:
     uv sync --locked --only-group build
 
-# update "uv.lock" to the latest versions
+# Build isolation deliberately does not use "uv.lock". Export the locked build
+# backend and pass the resulting, hashed constraints to "uv build" instead.
+[doc('update "uv.lock" and "build-constraints.txt" to the latest versions')]
 [group("dependencies")]
 update-dependencies:
     uv lock --upgrade
+    uv export --frozen --only-group build --output-file build-constraints.txt > /dev/null
 
 # update the pinned prek hooks (with a 7 day cooldown)
 [group("dependencies")]
