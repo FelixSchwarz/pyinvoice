@@ -9,8 +9,7 @@ description     = "cli script to generate PDF invoices from custom XML files"
 readme          = "README.md"
 license         = "MIT"
 license-files   = ["LICENSE.txt"]
-# only Python 3.10+ are actually tested
-requires-python = ">= 3.8"
+requires-python = ">= 3.9"
 dynamic         = ["version"]
 
 authors = [
