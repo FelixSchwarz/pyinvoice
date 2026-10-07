@@ -7,7 +7,8 @@ build-backend = "hatchling.build"
 name            = "pyinvoice"
 description     = "cli script to generate PDF invoices from custom XML files"
 readme          = "README.md"
-license         = {text = "MIT"}
+license         = "MIT"
+license-files   = ["LICENSE.txt"]
 # only Python 3.10+ are actually tested
 requires-python = ">= 3.8"
 dynamic         = ["version"]
@@ -18,7 +19,6 @@ authors = [
 
 classifiers = [
     "Development Status :: 4 - Beta",
-    "License :: OSI Approved :: MIT License",
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
