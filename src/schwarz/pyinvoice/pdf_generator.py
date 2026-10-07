@@ -1,5 +1,6 @@
 
 from contextlib import contextmanager
+import os
 from pathlib import Path
 import re
 import subprocess
@@ -19,12 +20,36 @@ _weasyprint_version = None
 
 def is_weasyprint_available():
     try:
-        process = subprocess.run(['weasyprint', '--version'], capture_output=True, shell=False)
+        process = _run_weasyprint(['--version'], capture_output=True)
     except FileNotFoundError:
         return False
     global _weasyprint_version
     _weasyprint_version = _extract_weasyprint_version(process.stdout)
     return True
+
+
+def _run_weasyprint(args, **kwargs):
+    cmd = ['weasyprint', *args]
+    return subprocess.run(cmd, shell=False, env=_subprocess_env(), **kwargs)
+
+
+def _subprocess_env():
+    """
+    Return the environment for external programs (e.g. WeasyPrint).
+
+    PyInstaller's (onefile) bootloader prepends its extraction directory to
+    LD_LIBRARY_PATH. Child processes inherit that, so a system Python (as used
+    by /usr/bin/weasyprint) loads our bundled libpython instead of the system
+    one, which breaks as soon as the system Python receives a patch update.
+    """
+    env = dict(os.environ)
+    if getattr(sys, 'frozen', False):
+        lp_orig = env.pop('LD_LIBRARY_PATH_ORIG', None)
+        if lp_orig is not None:
+            env['LD_LIBRARY_PATH'] = lp_orig
+        else:
+            env.pop('LD_LIBRARY_PATH', None)
+    return env
 
 
 def _extract_weasyprint_version(weasyprint_stdout):
@@ -78,13 +103,12 @@ def generate_pdf(invoice, invoice_cfg, target_path, *, with_logo=False):
         pdfa_params = ()
     html_str = template.render(invoice=invoice, **template_params)
     with store_generated_html(template_dir, html_str) as path_html:
-        cmd = [
-            'weasyprint',
+        args = [
             *pdfa_params,
             str(path_html.absolute()),
             str(target_path.absolute()),
         ]
-        subprocess.run(cmd, shell=False, cwd=template_dir)
+        _run_weasyprint(args, cwd=template_dir)
 
 def load_invoice_template(template_path, locale=None):
     tmpl_loader = jinja2.FileSystemLoader(searchpath=template_path.parent)
