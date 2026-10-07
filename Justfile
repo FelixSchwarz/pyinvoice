@@ -11,6 +11,11 @@ default:
 run-tests:
     uv run --locked --extra testing pytest
 
+# check the type annotations with ty
+[group("development")]
+check-types:
+    uv run --locked --group quality --all-extras ty check src
+
 # create/update the project virtualenv with all extras and the quality tools
 [group("development")]
 setup-venv:

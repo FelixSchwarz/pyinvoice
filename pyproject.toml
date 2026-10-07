@@ -57,6 +57,8 @@ build = [
 quality = [
     # >= 0.4.7 for "prek update --freeze --cooldown-days"
     "prek >= 0.4.7",
+    "ty",
+    "types-lxml",
 ]
 
 
