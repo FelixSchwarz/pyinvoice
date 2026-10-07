@@ -26,6 +26,11 @@ setup-venv:
 build:
     uv build --wheel --sdist --build-constraint build-constraints.txt --require-hashes
 
+# build the PyInstaller executable in "dist/" from the wheel, e.g. "just build-executable python3.14"
+[group("packaging")]
+build-executable python="python3": build
+    tools/build-executable.sh {{ quote(python) }}
+
 # install the build backend pinned by the current lockfile
 [group("dependencies")]
 install-locked-dependencies:

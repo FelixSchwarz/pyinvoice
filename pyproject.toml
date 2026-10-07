@@ -56,6 +56,9 @@ pyinvoice = "schwarz.pyinvoice.cli:cli_main"
 build = [
     "hatchling",
 ]
+executable = [
+    "pyinstaller",
+]
 quality = [
     # >= 0.4.7 for "prek update --freeze --cooldown-days"
     "prek >= 0.4.7",
