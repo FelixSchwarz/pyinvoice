@@ -31,6 +31,9 @@ class InvoiceItem:
         if '//' not in self.name:
             return (None, self.name)
         m = re.search(r'^(.+?)\s*//\s*(.+?)$', self.name)
+        if m is None:
+            # e.g. "// foo" (no title)
+            return (None, self.name)
         pos_title, pos_subtext = m.groups()
         return (pos_title, pos_subtext)
 

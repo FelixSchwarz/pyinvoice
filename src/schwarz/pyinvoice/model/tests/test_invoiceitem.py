@@ -14,6 +14,10 @@ def test_invoice_item_position_title():
     assert item.get_title() == 'foo'
     assert item.get_subtext() == 'bar baz'
 
+    item.name = '// bar baz'
+    assert item.get_title() is None
+    assert item.get_subtext() == '// bar baz'
+
 def test_invoice_item_get_real_price():
     """Test that Decimal computation is used."""
     item = InvoiceItem('foo', 2.333, number=2)

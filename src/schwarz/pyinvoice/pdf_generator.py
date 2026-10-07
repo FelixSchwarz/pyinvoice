@@ -3,6 +3,7 @@ import os
 import re
 import subprocess
 import sys
+from collections.abc import Iterator
 from contextlib import contextmanager
 from pathlib import Path
 from tempfile import NamedTemporaryFile
@@ -70,10 +71,17 @@ def weasyprint_version():
     return _weasyprint_version
 
 
+class InvoiceFormat(Format):
+    def __init__(self, locale, currency):
+        super().__init__(locale=locale)
+        self._currency = currency
+
+    def amount(self, number):
+        return self.currency(number, currency=self._currency)
+
+
 def build_formatter(locale, currency):
-    _format = Format(locale=locale)
-    _format.amount = lambda v: _format.currency(v, currency=currency)
-    return _format
+    return InvoiceFormat(locale, currency=currency)
 
 def generate_pdf(invoice, invoice_cfg, target_path, *, with_logo=False):
     template_path = Path(invoice_cfg['template'])
@@ -123,11 +131,12 @@ def load_invoice_template(template_path, locale=None):
     if locale:
         locale_dir = (template_path.parent / 'i18n')
         translations = Translations.load(dirname=locale_dir, locales=[locale], domain='pyinvoice')
-        tmpl_env.install_gettext_translations(translations)
+        # added by the "jinja2.ext.i18n" extension
+        tmpl_env.install_gettext_translations(translations)  # ty: ignore[unresolved-attribute]
     return tmpl_env.get_template(template_path.name)
 
 @contextmanager
-def store_generated_html(template_path, html_str) -> Path:
+def store_generated_html(template_path, html_str) -> Iterator[Path]:
     with NamedTemporaryFile(dir=template_path, mode='w', suffix='.html') as temp_fp:
         temp_fp.write(html_str)
         temp_fp.seek(0)

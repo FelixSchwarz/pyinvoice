@@ -29,6 +29,8 @@ class InvoiceParser:
     def get_valid_xml(cls, filename=None, content=None):
         xmlschema = cls._invoice_schema()
         if content is None:
+            if filename is None:
+                raise ValueError('either "filename" or "content" is required')
             content_fp = open(filename, 'rb')
         elif isinstance(content, bytes):
             content_fp = BytesIO(content)

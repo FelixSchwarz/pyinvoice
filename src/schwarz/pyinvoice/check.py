@@ -40,6 +40,8 @@ def discover_checks(path):
 def load_checker_from_path(py_path):
     module_name = f'schwarz.pyinvoice.contrib.checks.{py_path.stem}'
     spec = importlib.util.spec_from_file_location(module_name, py_path)
+    if (spec is None) or (spec.loader is None):
+        raise ImportError(f'unable to load checks from "{py_path}"')
     checker_mod = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(checker_mod)
     return checker_mod
