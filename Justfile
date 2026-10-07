@@ -31,6 +31,18 @@ build:
 build-executable python="python3": build
     tools/build-executable.sh {{ quote(python) }}
 
+# remove generated files ("build/", "dist/")
+[group("packaging")]
+clean:
+    #!/usr/bin/env bash
+    set -euo pipefail
+    paths=(build dist)
+    for path in "${paths[@]}"; do
+        if [ -e "$path" ]; then
+            trash "$path"
+        fi
+    done
+
 # install the build backend pinned by the current lockfile
 [group("dependencies")]
 install-locked-dependencies:
