@@ -31,7 +31,6 @@ classifiers = [
 
 dependencies = [
     "babel",
-    "docopt-ng",
     "jinja2",
     "lxml",
     "packaging",
