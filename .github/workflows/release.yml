@@ -1,0 +1,177 @@
+name: Create Release Artifacts
+
+on:
+  push:
+    tags:
+      - "v*"
+
+# Kept read-only because the reusable test workflow inherits these. Jobs which
+# need write access declare it themselves.
+permissions:
+  contents: read
+
+
+env:
+  # query OSV for known malware before syncing
+  UV_MALWARE_CHECK: "1"
+
+
+jobs:
+  tests:
+    uses: ./.github/workflows/tests.yml
+    with:
+      use_locked_dependencies: true
+
+  artifacts:
+    needs: tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: read
+      id-token: write
+      attestations: write
+    outputs:
+      release_name: ${{ steps.release-metadata.outputs.release_name }}
+      is_prerelease: ${{ steps.release-metadata.outputs.is_prerelease }}
+
+    steps:
+    - name: checkout code
+      uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      with:
+        persist-credentials: false
+
+    - uses: astral-sh/setup-uv@c18668ad3cf93ea998bef934396af7bb5c839dc7 # v10.2.0
+      with:
+        version: "latest-known"
+        # a poisoned cache must not end up in release artifacts
+        enable-cache: false
+
+    - name: Prepare release metadata
+      id: release-metadata
+      run: |
+        release_name=${GITHUB_REF_NAME#v}
+        package_version=$(tr -d '\n' < VERSION.txt)
+        if [ "$release_name" != "$package_version" ]; then
+          echo "tag version $release_name does not match package version $package_version" >&2
+          exit 1
+        fi
+
+        is_prerelease=false
+        if [[ "$release_name" =~ (^|[0-9._-])(a|alpha|b|beta|c|rc|pre|preview)[._-]?[0-9]+([.+-]|$)|\.dev[0-9]+([.+-]|$) ]]; then
+          is_prerelease=true
+        fi
+
+        echo "release_name=$release_name" >> "$GITHUB_OUTPUT"
+        echo "is_prerelease=$is_prerelease" >> "$GITHUB_OUTPUT"
+
+    - name: Build wheel and sdist
+      run: |
+        uv build --wheel --sdist --build-constraint build-constraints.txt --require-hashes
+        rm dist/.gitignore
+
+    - name: Attest build provenance
+      uses: actions/attest-build-provenance@4d101475d8b20a2381f78447822ac1eab6504dd8 # v4.2.2
+      with:
+        subject-path: "dist/*"
+
+    - name: upload release artifacts
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+      with:
+        name: "release-artifacts"
+        path: dist/*
+        if-no-files-found: error
+
+  executable:
+    needs: artifacts
+    runs-on: ubuntu-latest
+    container:
+      # The executable only runs on systems with the same or a newer glibc, so
+      # it is built on an older (but still supported) Debian release.
+      image: python:3.14-bookworm
+    timeout-minutes: 10
+    permissions:
+      contents: read
+      id-token: write
+      attestations: write
+    env:
+      UV_LINK_MODE: copy
+
+    steps:
+    - name: checkout code
+      uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      with:
+        persist-credentials: false
+
+    - uses: astral-sh/setup-uv@c18668ad3cf93ea998bef934396af7bb5c839dc7 # v10.2.0
+      with:
+        version: "latest-known"
+        enable-cache: false
+
+    - name: download release artifacts
+      uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
+      with:
+        name: "release-artifacts"
+        path: dist
+
+    # The executable is built from the wheel which was uploaded above so it
+    # contains exactly the same code as the released wheel.
+    - name: build executable
+      run: tools/build-executable.sh python
+
+    - name: Attest build provenance
+      uses: actions/attest-build-provenance@4d101475d8b20a2381f78447822ac1eab6504dd8 # v4.2.2
+      with:
+        subject-path: "dist/pyinvoice-*-linux-*"
+
+    - name: upload executable
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+      with:
+        name: "executable"
+        path: dist/pyinvoice-*-linux-*
+        if-no-files-found: error
+
+  publish:
+    needs: [artifacts, executable]
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    # Approval for this environment guards the GitHub release.
+    environment:
+      name: release
+    permissions:
+      contents: write
+
+    steps:
+    - name: download release artifacts
+      uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
+      with:
+        name: "release-artifacts"
+        path: dist
+
+    - name: download executable
+      uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
+      with:
+        name: "executable"
+        path: dist
+
+    # Immutable releases freeze their assets at publication, so attach the
+    # artifacts to a draft first and publish that draft only after all assets
+    # were uploaded successfully.
+    - name: Create draft GitHub release
+      uses: softprops/action-gh-release@efb35369e0ad2afab669f228072c1b0d510eae64 # v3.0.3
+      with:
+        tag_name: ${{ github.ref_name }}
+        name: ${{ needs.artifacts.outputs.release_name }}
+        prerelease: ${{ needs.artifacts.outputs.is_prerelease }}
+        draft: true
+        files: dist/*
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Publish GitHub release
+      uses: softprops/action-gh-release@efb35369e0ad2afab669f228072c1b0d510eae64 # v3.0.3
+      with:
+        tag_name: ${{ github.ref_name }}
+        prerelease: ${{ needs.artifacts.outputs.is_prerelease }}
+        draft: false
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

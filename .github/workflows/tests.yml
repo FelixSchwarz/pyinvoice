@@ -1,7 +1,10 @@
 name: run tests
 
 on:
+  # tags are tested by "release.yml"
   push:
+    branches:
+    - '**'
   # This is necessary so that "release.yml" can require a passing test suite
   workflow_call:
     inputs:
