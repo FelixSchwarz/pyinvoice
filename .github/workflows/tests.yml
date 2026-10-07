@@ -9,6 +9,33 @@ env:
 
 
 jobs:
+  quality:
+    runs-on: ubuntu-latest
+    container:
+      image: python:3.14
+    env:
+      # the uv cache and the workspace are on different filesystems in a
+      # container job, so uv can not hardlink and would warn about it
+      UV_LINK_MODE: copy
+
+    steps:
+    - uses: actions/checkout@v4
+    - uses: astral-sh/setup-uv@v10.2.0
+      with:
+        version: "latest-known"
+
+    # This job runs inside a container, not directly on the runner: the
+    # checkout belongs to the runner user while the steps run as root, so git
+    # rejects the repository ("dubious ownership"). "actions/checkout" does not
+    # cover this, it sets "safe.directory" only in a temporary git config which
+    # applies to its own git commands.
+    - name: Allow git to use the checked out repository
+      run: git config --global --add safe.directory "$GITHUB_WORKSPACE"
+
+    - name: Run prek hooks
+      run: uv run --python python --group quality prek run --all-files
+
+
   tests-cpython:
     runs-on: ubuntu-latest
     strategy:

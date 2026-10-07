@@ -50,6 +50,13 @@ Code            = "https://github.com/FelixSchwarz/pyinvoice"
 pyinvoice = "schwarz.pyinvoice.cli:cli_main"
 
 
+[dependency-groups]
+quality = [
+    # >= 0.4.7 for "prek update --freeze --cooldown-days"
+    "prek >= 0.4.7",
+]
+
+
 [tool.hatch.version]
 path = "VERSION.txt"
 pattern = "(?P<version>.+)"
@@ -64,3 +71,46 @@ include = [
     "/pytest.ini",
     "/VERSION.txt",
 ]
+
+
+[tool.ruff]
+line-length = 110
+src = ["src"]
+
+
+[tool.ruff.lint]
+ignore = [
+    # F405 "… may be undefined, or defined from star imports: …"
+    #    Sometimes star imports are perfectly fine IMHO.
+    "F403",
+    "F405",
+    # E731: "Do not assign a `lambda` expression, use a `def`"
+    #    I think assigning to lambda expressions is ok.
+    "E731",
+    # UP031: "Use format specifiers instead of percent format"
+    #    Style only, "%" formatting is not deprecated.
+    "UP031",
+]
+
+select = [
+    # Pyflakes
+    "F",
+    # Pycodestyle
+    "E",
+    "W",
+    # isort
+    "I001",
+    # pyupgrade: syntax which is obsolete for the minimum Python version
+    "UP",
+
+    # Special rule code to enforce that your noqa directives are "valid", in that
+    # the violations they say they ignore are actually being triggered on that line
+    # (and thus suppressed).
+    # replaces basically "yesqa"
+    "RUF100",
+]
+
+[tool.ruff.lint.isort]
+lines-after-imports = 2
+known-first-party = ["schwarz.pyinvoice"]
+combine-as-imports = true
