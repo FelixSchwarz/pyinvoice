@@ -1,5 +1,4 @@
 __pycache__
-/.pytest_cache/
 /.project
 /.pydevproject
 /build
@@ -7,3 +6,8 @@ __pycache__
 /userdata
 /src/*.egg-info
 /venv*
+/.venv
+# e.g. ruff/pytest
+/.*cache
+/*.code-workspace
+/.vscode
