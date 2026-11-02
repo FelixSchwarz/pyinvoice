@@ -2,11 +2,19 @@
 import importlib.util
 import sys
 from collections import namedtuple
+from pathlib import Path
+from typing import NamedTuple
 
 
 __all__ = ['check_invoice', 'MetaInfo']
 
-MetaInfo = namedtuple('MetaInfo', ('config', 'config_dir', 'invoice_filename'))
+class MetaInfo(NamedTuple):
+    config: dict
+    config_dir: Path
+    invoice_filename: str
+    ignored_errors: frozenset[str] = frozenset()
+
+
 CheckResult = namedtuple('CheckResult', ('key', 'message'))
 
 def check_invoice(invoice, meta):

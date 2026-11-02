@@ -69,7 +69,12 @@ def cli_main(argv=None):
     invoice_cfg = parse_config(path_cfg)
 
     config_dir = Path(path_cfg).parent
-    meta = MetaInfo(config=invoice_cfg, config_dir=config_dir, invoice_filename=path_invoice_xml)
+    meta = MetaInfo(
+        config=invoice_cfg,
+        config_dir=config_dir,
+        invoice_filename=path_invoice_xml,
+        ignored_errors=frozenset(ignored_errors),
+    )
     errors = check_invoice(invoice, meta)
     if errors:
         found_error = False
