@@ -3,7 +3,7 @@ import os
 import re
 import subprocess
 import sys
-from collections.abc import Iterator
+from collections.abc import Generator
 from contextlib import contextmanager
 from pathlib import Path
 from tempfile import NamedTemporaryFile
@@ -136,7 +136,7 @@ def load_invoice_template(template_path, locale=None):
     return tmpl_env.get_template(template_path.name)
 
 @contextmanager
-def store_generated_html(template_path, html_str) -> Iterator[Path]:
+def store_generated_html(template_path, html_str) -> Generator[Path]:
     with NamedTemporaryFile(dir=template_path, mode='w', suffix='.html') as temp_fp:
         temp_fp.write(html_str)
         temp_fp.seek(0)
